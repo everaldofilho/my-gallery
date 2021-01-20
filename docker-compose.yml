@@ -1,0 +1,24 @@
+version: "3"
+services:
+  api-gallery:
+    build:
+      context: ./api_gallery/
+      dockerfile: Dockerfile
+    container_name: api-gallery
+    working_dir: /app
+    ports:
+      - 8083:4000
+    volumes:
+      - ./api_gallery:/app
+  elixir:
+    build: .
+    stdin_open: true
+    tty: true
+    container_name: gallery_elixir
+    working_dir: /app
+    volumes:
+      - ./:/app
+networks:
+  default:
+    external: 
+      name: Criativoweb
