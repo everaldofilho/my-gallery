@@ -5,7 +5,7 @@ config :api_gallery, ApiGallery.Repo,
   username: "root",
   password: "root",
   database: "api_gallery_dev",
-  hostname: "mysql",
+  hostname: "gallery-db",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
