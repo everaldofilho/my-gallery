@@ -10,6 +10,7 @@ services:
   gallery-db:
     image: mysql:5.7
     container_name: gallery-db
+    hostname: gallery-db
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
@@ -36,8 +37,8 @@ services:
     working_dir: /app
     ports:
       - 8083:4000
-    volumes:
-      - ./api_gallery:/app
+    #volumes:
+      #- ./api_gallery:/app
     links:
       - "gallery-db"
   api-gallery-upload:
@@ -50,8 +51,8 @@ services:
     tty: true
     ports:
       - 8084:4000
-    volumes:
-      - ./api_gallery_upload:/app
+    #volumes:
+     # - ./api_gallery_upload:/app
     links:
       - "rabbitmq"
   image-treatment:
@@ -64,8 +65,8 @@ services:
     tty: true
     ports:
       - 8086:4000
-    volumes:
-      - ./image_treatment:/app
+    #volumes:
+     # - ./image_treatment:/app
     links:
       - "rabbitmq"
 networks:

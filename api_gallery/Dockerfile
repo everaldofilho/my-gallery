@@ -3,6 +3,7 @@ ENV MIX_ENV dev
 WORKDIR /app
 RUN mix local.hex --force && \
  mix archive.install hex phx_new 1.5.3 --force
+#teste
 COPY ./ /app
 RUN mix deps.get --quiet
 RUN mix local.rebar --force

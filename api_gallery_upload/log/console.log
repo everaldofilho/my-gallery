@@ -41,3 +41,4 @@
 2021-01-26 10:06:02.815 [info] <0.43.0> Application phoenix_live_view started on node nonode@nohost
 2021-01-26 10:06:02.823 [info] <0.43.0> Application phoenix_live_dashboard started on node nonode@nohost
 2021-01-26 10:06:02.990 [info] <0.43.0> Application api_gallery_upload started on node nonode@nohost
+2021-01-26 11:06:00.506 [info] <0.59.0> SIGTERM received - shutting down

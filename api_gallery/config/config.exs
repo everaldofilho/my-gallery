@@ -6,6 +6,14 @@
 
 # General application configuration
 use Mix.Config
+# Configure your database
+config :api_gallery, ApiGallery.Repo,
+  username: "root",
+  password: "root",
+  database: "api_gallery_dev",
+  hostname: "gallery-db",
+  show_sensitive_data_on_connection_error: true,
+  pool_size: 10
 
 # Configures the endpoint
 config :api_gallery, ApiGalleryWeb.Endpoint,
