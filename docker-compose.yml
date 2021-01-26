@@ -1,5 +1,31 @@
 version: "3"
 services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    container_name: rabbitmq
+    ports:
+      - 8085:15672
+
+  gallery-db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=user 
+    ports:
+      - 3307:3306
+
+  gallery-frontend:
+    image: nginx
+    container_name: gallery-frontend
+    volumes:
+      - ./gallery_front/public:/usr/share/nginx/html
+    ports:
+      - 8087:80
+  
   api-gallery:
     build:
       context: ./api_gallery/
@@ -10,14 +36,36 @@ services:
       - 8083:4000
     volumes:
       - ./api_gallery:/app
-  elixir:
-    build: .
+    links:
+      - "gallery-db"
+  api-gallery-upload:
+    build:
+      context: ./api_gallery_upload/
+      dockerfile: Dockerfile
+    container_name: api-gallery-upload
+    working_dir: /app
     stdin_open: true
     tty: true
-    container_name: gallery_elixir
-    working_dir: /app
+    ports:
+      - 8084:4000
     volumes:
-      - ./:/app
+      - ./api_gallery_upload:/app
+    links:
+      - "rabbitmq"
+  image-treatment:
+    build:
+      context: ./image_treatment/
+      dockerfile: Dockerfile
+    container_name: image-treatment
+    working_dir: /app
+    stdin_open: true
+    tty: true
+    ports:
+      - 8086:4000
+    volumes:
+      - ./image_treatment:/app
+    links:
+      - "rabbitmq"
 networks:
   default:
     external: 

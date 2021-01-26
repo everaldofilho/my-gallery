@@ -2,6 +2,7 @@ defmodule ApiGalleryWeb.Router do
   use ApiGalleryWeb, :router
 
   pipeline :api do
+    plug CORSPlug, origin: "*"
     plug :accepts, ["json"]
   end
 

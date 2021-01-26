@@ -5,5 +5,5 @@ RUN mix local.hex --force && \
  mix archive.install hex phx_new 1.5.3 --force
 COPY ./ /app
 RUN mix deps.get
-EXPOSE 400
+EXPOSE 4000
 CMD ["mix", "phx.server"]

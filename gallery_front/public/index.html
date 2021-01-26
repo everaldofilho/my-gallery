@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Gallery</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
+        integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
+        crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="container-fluid mt-3">
+            <template v-if="router == 'gallerys'">
+                <h2>All Gallerys <button type="reset" class="btn btn-success"
+                        v-on:click="created = !created">New</button></h2>
+                <div class="card mb-3" v-if="created">
+                    <div class="card-body">
+                        <form v-on:submit.prevent="createGallery()" action="/">
+
+                            <h5 class="card-title">New Gallery</h5>
+                            <div class="input-group mb-3">
+                                <input type="text" v-model="gallery.name" required=true class="form-control"
+                                    placeholder="title">
+                            </div>
+                            <button type="reset" class="btn btn-danger" v-on:click="created = !created">Cancel</button>
+                            <button type="submit" class="btn btn-success">Save</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row row-cols-1 row-cols-md-4 g-4">
+                    <div class="col" v-for="(item, index) in gallerys">
+                        <div class="card mouse_click" v-on:click="selectedGallery(item)">
+                            <div class="card-img img-background" style="height: 200px; width: 100%;"
+                                v-bind:style="{ backgroundImage: 'url(' + mountedUrl(item.cover.url) + ')' }">
+                              
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{item.name}}</h5>
+                                <p class="card-text"></p>
+                                <p class="card-text"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template v-if="router == 'selected_gallery'">
+                <h3>{{gallery.name}}
+                    <input type="file" id="file" ref="file" v-on:change="handleFileUpload()" class="custom-file-input"
+                        multiple />
+                    <label class="btn btn-success" for="file">Send images</label>
+                    <button class="btn btn-warning float-right" v-on:click="deselectGallery()">Voltar</button>
+                </h3>
+                <!-- <div class="progress mb-3" v-if="getPorcentage != 100">
+                    <div class="progress-bar progress-bar-striped bg-info" role="progressbar"
+                        :style="getPorcentageStyle" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                </div> -->
+                <div class="alert alert-success mb-3" v-if="show_alert" >
+                    <h3  class="alert-heading">Image sent successfully</h3>
+                    <p>Wait a few seconds we are doing the assembly...</p>
+                </div>
+                <div class="row">
+                    <div class="col-md-4" v-for="(item, index) in gallery.images">
+                        <div class="card mb-3 mouse_click" v-on:click="selectedImage(item)">
+                            <div class="card-img img-background" style="height: 200px; width: 100%;"
+                                v-bind:style="{ backgroundImage: 'url(' + mountedUrl(item.url) + ')' }">
+                            </div>
+                            <div class="card-body ">
+                                <h5 class="card-title">{{item.title}}</h5>
+                                <p class="card-text"></p>
+                                <p class="card-text"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+        <div class="modal" tabindex="-1" role="dialog" style="display: block;" v-if="show_modal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{image_selected.title}}</h5>
+                        <button type="button" v-on:click="show_modal = !show_modal" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <img :src="image_selected.url" class="img-responsible">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" v-on:click="show_modal = !show_modal" class="btn btn-secondary"
+                            data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show" v-if="show_modal"></div>
+    </div>
+    <style>
+        .mouse_click {
+            cursor: pointer;
+        }
+
+        .img-background {
+            background: no-repeat center center;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+
+        /* Esconde o input */
+        input[type='file'] {
+            display: none
+        }
+
+        /* Aparência que terá o seletor de arquivo */
+        label {
+            background-color: #3498db;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            margin: 10px;
+            padding: 6px 20px
+        }
+    </style>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                router: "gallerys",
+                gallery: {},
+                created: false,
+                upload: false,
+                gallerys: [],
+                file: null,
+                loading_image: false,
+                show_modal: false,
+                total_images_existes: 0,
+                total_images_upload: 0
+            },
+            mounted() {
+                this.getGallerys();
+            },
+            computed: {
+                getPorcentage() {
+                    let total = this.gallery.images.length - this.total_images_existes;
+                    let porcentage = Math.ceil((total * 100) / this.total_images_upload);
+                    return porcentage
+                },
+                getPorcentageStyle() {
+                    return { "width": this.getPorcentage + "%" }
+                },
+            },
+            methods: {
+                mountedUrl(url) {
+                    return url;
+                },
+                deselectGallery(gallery) {
+                    this.router = 'gallerys';
+                    this.gallery = {};
+                },
+                selectedGallery(gallery) {
+                    this.gallery = gallery;
+                    this.router = 'selected_gallery';
+                    this.getGallery();
+                },
+                selectedImage(item) {
+                    this.image_selected = item;
+                    this.show_modal = true;
+                },
+                handleFileUpload() {
+                    this.file = []
+                    for (let index = 0; index < this.$refs.file.files.length; index++) {
+                        this.file[index] = this.$refs.file.files[index];
+                    }
+                    if (this.file) {
+                        this.uploadFile()
+                    }
+                },
+                getGallerys() {
+                    axios.get("http://localhost:8083/api/gallerys").then(
+                        (result) => this.gallerys = result.data.data.map((gallery) => {
+                            gallery.cover = { url: "./no-image.png" };
+                            if (typeof gallery.images[0] !== "undefined") {
+                                gallery.cover = gallery.images[0];
+                            }
+                            return gallery;
+                        }),
+                    );
+                },
+                getGallery() {
+                    if (this.gallery && this.gallery.id) {
+                        axios.get("http://localhost:8083/api/gallerys/" + this.gallery.id).then(
+                            (result) => {
+                                this.gallery = result.data.gallery;
+                                this.getGallerys();
+                                setTimeout(this.getGallery, 1000)
+                            },
+                        );
+                    }
+                },
+                createGallery() {
+                    axios.post("http://localhost:8083/api/gallerys", {
+                        name: this.gallery.name
+                    }).then((result) => {
+                        this.selectedGallery(result.data.gallery)
+                        this.getGallerys();
+                    })
+                    return false;
+                },
+                uploadFile() {
+                    this.loading_image = true;
+                    this.total_images_existes = this.gallery.images.length;
+                    this.total_images_upload = this.file.length;
+                    let formData = new FormData();
+                    for (let index = 0; index < this.file.length; index++) {
+                        formData.append('image[]', this.file[index]);
+                    }
+                    formData.append('gallery_id', this.gallery.id);
+                    axios.post('http://localhost:8084/api/upload',
+                        formData,
+                        {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }
+                    ).then((result) => {
+                        this.file = null;
+                        this.upload = false;
+                        this.loading_image = false;
+                        this.getGallerys();
+                        this.show_alert = true;
+
+                        setTimeout(() => this.show_alert = false, 10000)
+                    }).catch(() => {
+                        this.file = null;
+                        this.loading_image = false;
+                        console.log('FAILURE!!');
+                    });
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>

@@ -7,21 +7,6 @@
 # General application configuration
 use Mix.Config
 
-config :api_gallery, ApiGallery.Repo,
-  database: "api_gallery_repo",
-  username: "user",
-  password: "pass",
-  hostname: "localhost"
-
-config :api_gallery, ApiGallery.Repo,
-  database: "api_gallery_repo",
-  username: "user",
-  password: "pass",
-  hostname: "localhost"
-
-config :api_gallery,
-  ecto_repos: [ApiGallery.Repo]
-
 # Configures the endpoint
 config :api_gallery, ApiGalleryWeb.Endpoint,
   url: [host: "localhost"],
