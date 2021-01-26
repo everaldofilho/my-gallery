@@ -186,7 +186,7 @@
                     }
                 },
                 getGallerys() {
-                    axios.get("http://localhost:8083/api/gallerys").then(
+                    axios.get("http://ec2-18-216-140-229.us-east-2.compute.amazonaws.com:8083/api/gallerys").then(
                         (result) => this.gallerys = result.data.data.map((gallery) => {
                             gallery.cover = { url: "./no-image.png" };
                             if (typeof gallery.images[0] !== "undefined") {
@@ -198,7 +198,7 @@
                 },
                 getGallery() {
                     if (this.gallery && this.gallery.id) {
-                        axios.get("http://localhost:8083/api/gallerys/" + this.gallery.id).then(
+                        axios.get("http://ec2-18-216-140-229.us-east-2.compute.amazonaws.com:8083/api/gallerys/" + this.gallery.id).then(
                             (result) => {
                                 this.gallery = result.data.gallery;
                                 this.getGallerys();
@@ -208,7 +208,7 @@
                     }
                 },
                 createGallery() {
-                    axios.post("http://localhost:8083/api/gallerys", {
+                    axios.post("http://ec2-18-216-140-229.us-east-2.compute.amazonaws.com:8083/api/gallerys", {
                         name: this.gallery.name
                     }).then((result) => {
                         this.selectedGallery(result.data.gallery)
@@ -225,7 +225,7 @@
                         formData.append('image[]', this.file[index]);
                     }
                     formData.append('gallery_id', this.gallery.id);
-                    axios.post('http://localhost:8084/api/upload',
+                    axios.post('http://ec2-18-216-140-229.us-east-2.compute.amazonaws.com:8084/api/upload',
                         formData,
                         {
                             headers: {
