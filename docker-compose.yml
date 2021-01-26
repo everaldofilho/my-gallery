@@ -9,12 +9,14 @@ services:
 
   gallery-db:
     image: mysql:5.7
+    container_name: gallery-db
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
       - MYSQL_ROOT_HOST=%
       - MYSQL_USER=user
       - MYSQL_PASSWORD=user 
+      - MYSQL_DATABASE=api_gallery_dev
     ports:
       - 3307:3306
 
