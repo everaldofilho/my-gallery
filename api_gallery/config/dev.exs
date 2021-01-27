@@ -5,7 +5,8 @@ config :api_gallery, ApiGallery.Repo,
   username: "root",
   password: "root",
   database: "api_gallery_dev",
-  hostname: "gallery-db",
+  hostname: "gallerydb",
+  port: 3306,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
@@ -47,7 +48,7 @@ config :api_gallery, ApiGalleryWeb.Endpoint,
 # different ports.
 
 # Do not include metadata nor timestamps in development logs
-config :logger, :console, format: "[$level] $message\n"
+config :logger, :console, format: "[$time]:[$level] $message\n"
 
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.

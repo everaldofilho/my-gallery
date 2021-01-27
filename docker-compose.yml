@@ -7,10 +7,10 @@ services:
     ports:
       - 8085:15672
 
-  gallery-db:
+  gallerydb:
     image: mysql:5.7
-    container_name: gallery-db
-    hostname: gallery-db
+    container_name: gallerydb
+    hostname: gallerydb
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
@@ -37,10 +37,10 @@ services:
     working_dir: /app
     ports:
       - 8083:4000
-    #volumes:
-      #- ./api_gallery:/app
+    volumes:
+      - ./api_gallery:/app
     links:
-      - "gallery-db"
+      - "gallerydb"
   api-gallery-upload:
     build:
       context: ./api_gallery_upload/

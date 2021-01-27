@@ -9,7 +9,7 @@ config :api_gallery, ApiGallery.Repo,
   username: "root",
   password: "root",
   database: "api_gallery_test#{System.get_env("MIX_TEST_PARTITION")}",
-  hostname: "gallery-db",
+  hostname: "gallerydb",
   pool: Ecto.Adapters.SQL.Sandbox
 
 # We don't run a server during test. If one is required,

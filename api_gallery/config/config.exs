@@ -6,14 +6,9 @@
 
 # General application configuration
 use Mix.Config
-# Configure your database
-config :api_gallery, ApiGallery.Repo,
-  username: "root",
-  password: "root",
-  database: "api_gallery_dev",
-  hostname: "gallery-db",
-  show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+
+config :api_gallery,
+  ecto_repos: [ApiGallery.Repo]
 
 # Configures the endpoint
 config :api_gallery, ApiGalleryWeb.Endpoint,
@@ -30,6 +25,8 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
