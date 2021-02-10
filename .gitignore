@@ -1,0 +1,6 @@
+
+**/dist/
+**/_build/
+**/cover/
+**/deps/
+**/doc/

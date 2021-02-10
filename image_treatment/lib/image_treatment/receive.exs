@@ -26,10 +26,13 @@ defmodule Receive do
 
           Logger.debug("- Fazendo o download da imagem do background")
           {:ok, path_background} = Transformer.download_image(url_backfround)
+
           Logger.debug("- Deixando a imagem background em um tamanho padrão")
           {:ok, path_background_thumb} = Transformer.transform_thumb(path_background, "700x500")
+
           Logger.debug("- Criando a primeira parte da montagem")
           {:ok, path_charge} = Transformer.add_background(path_thumb, path_background_thumb, Transformer.position_random())
+
           Logger.debug("- Criando a segunda parte da montagem")
           {:ok, path_charge_charge} = Transformer.transform_charge(path_charge)
 
@@ -40,12 +43,14 @@ defmodule Receive do
           Logger.debug("- Registrando imagem na Gallery")
           ImageTreatment.ClientGallery.register_image(payload["gallery_id"], payload["image_name"], url)
 
+          Logger.debug("- Apaga todas as imagens utilizadas")
           File.rm(path_background_thumb)
           File.rm(path_charge_charge)
           File.rm(path_background)
           File.rm(path_thumb)
           File.rm(path_charge)
           File.rm(path_original)
+
           AMQP.Basic.ack(channel, meta.delivery_tag)
           Logger.debug("- Imagem disponibilizada com sucesso #{url}")
         catch
