@@ -1,4 +1,4 @@
-# Projeto em Elixir para praticar
+# Galeria de imagens (Elixir)
 
 ## Estrutura de pastas
 
